@@ -1,2 +1,2 @@
-# Angry-Viking
- A game about a very angry Viking
+# Angry-Devil
+ A game about a very angry Devil defending its home
