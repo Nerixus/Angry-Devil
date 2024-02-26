@@ -12,4 +12,9 @@ public class Unit : MonoBehaviour
         if (health == null)
             health = GetComponent<Health>();
     }
+
+    public virtual void DealDamage(Unit target)
+    {
+        target.health.Damage(new Health.DamageInfo(10));
+    }
 }

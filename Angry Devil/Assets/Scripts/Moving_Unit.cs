@@ -9,4 +9,9 @@ public class Moving_Unit : Unit
     {
         base.Start();
     }
+
+    public virtual void MoveUnit(Vector3 moveVector)
+    {
+        transform.Translate(moveVector * moveSpeed * Time.deltaTime, Space.World);
+    }
 }
