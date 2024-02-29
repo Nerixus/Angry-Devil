@@ -6,6 +6,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public Health health;
+    private UnitPool pool;
 
     public void Start()
     {
@@ -13,8 +14,28 @@ public class Unit : MonoBehaviour
             health = GetComponent<Health>();
     }
 
+    public UnitPool Pool
+    {
+        get { return pool; }
+        set { pool = value; }
+    }
+
     public virtual void DealDamage(Unit target)
     {
-        target.health.Damage(new Health.DamageInfo(10));
+        target.health.Damage(new DamageInfo(10));
     }
+
+    public virtual void ResetUnit()
+    {
+        pool.ReturnToPool(this);
+    }
+}
+
+public enum State
+{
+    SPAWNING,
+    MOVING,
+    ATTACKING,
+    DYING,
+    IDLE
 }

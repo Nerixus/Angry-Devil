@@ -9,15 +9,7 @@ public class Health : MonoBehaviour
 
 	public GameObject hitEffect;
 
-	public class DamageInfo
-	{
-		public float damage = 0f;
-
-		public DamageInfo(float _damage)
-		{
-			damage = _damage;
-		}
-	}
+	
 
 	// Use this for initialization
 	void Start()
@@ -34,8 +26,19 @@ public class Health : MonoBehaviour
 			Destroy(gameObject);
 	}
 
-	public float CurrentHealth
+	public float HealthValue
 	{
+		set { health = value; }
 		get { return health; }
+	}
+}
+
+public class DamageInfo
+{
+	public float damage = 0f;
+
+	public DamageInfo(float _damage)
+	{
+		damage = _damage;
 	}
 }

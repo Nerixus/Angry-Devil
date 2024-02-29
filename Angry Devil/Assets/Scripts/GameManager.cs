@@ -9,8 +9,7 @@ public class GameManager : StaticInstance<GameManager>
     public GameObject playerPrefab;
     public CinemachineVirtualCamera cameraController;
     [Header("Enemies")]
-    public GameObject[] enemyPrefabs;
-    public Transform[] spawners;
+    public EnemyFactory enemyFactory;
 
     Player_Unit currentPlayer;
 
@@ -30,9 +29,7 @@ public class GameManager : StaticInstance<GameManager>
 
     void CreateEnemy()
     {
-        int randSpawn = Random.Range(0, spawners.Length);
-        int randEnemy = Random.Range(0, enemyPrefabs.Length);
-        Instantiate(enemyPrefabs[randEnemy], spawners[randSpawn].position, Quaternion.identity, transform);
+        enemyFactory.CreateEnemy();
     }
     void EndGame()
     {
