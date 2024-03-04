@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : StaticInstance<GameManager>
 {
@@ -11,8 +12,11 @@ public class GameManager : StaticInstance<GameManager>
     public CinemachineVirtualCamera cameraController;
     [Header("Enemies")]
     public EnemyFactory enemyFactory;
+    [Header("UI")]
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI scoreText;
+    [Header("Game Over")]
+    public GameObject loseScreen;
 
     Player_Unit currentPlayer;
     Health healthComponent;
@@ -51,7 +55,9 @@ public class GameManager : StaticInstance<GameManager>
 
     IEnumerator EndGame()
     {
+        loseScreen.SetActive(true);
         yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(0);
     }
 
     void IncreaseScore()
