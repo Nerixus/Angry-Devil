@@ -5,9 +5,8 @@ using UnityEngine;
 public class Moving_Unit : Unit
 {
     public float moveSpeed;
-    public void Start()
+    public virtual void Start()
     {
-        base.Start();
     }
 
     public virtual void MoveUnit(Vector3 moveVector)

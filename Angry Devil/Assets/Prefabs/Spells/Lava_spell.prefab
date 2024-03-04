@@ -9683,8 +9683,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 5
   damage: 10
-  damageFrequency: 1
+  damageFrequency: 2
   damageRepetitions: 2
+  maxUses: 2
 --- !u!135 &8971862131967624048
 SphereCollider:
   m_ObjectHideFlags: 0

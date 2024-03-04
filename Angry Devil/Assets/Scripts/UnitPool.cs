@@ -5,19 +5,24 @@ using UnityEngine;
 public class UnitPool : MonoBehaviour
 {
     public GameObject unitPrefab;
-    Queue<Unit> pool = new Queue<Unit>();
+    public Queue<Unit> pool = new Queue<Unit>();
 
     public Unit GetPoolUnit()
     {
         if (pool.Count > 0)
         {
-            return pool.Dequeue();
+            Unit poolUnit = pool.Dequeue();
+            poolUnit.transform.SetParent(transform);
+            poolUnit.gameObject.SetActive(true);
+            poolUnit.pool = this;
+            return poolUnit;
         }
         else
         {
             GameObject newUnit = Instantiate(unitPrefab);
+            newUnit.transform.SetParent(transform);
             Unit newUnitComponent = newUnit.GetComponent<Unit>();
-            newUnitComponent.Pool = this;
+            newUnitComponent.pool = this;
             return newUnitComponent;
         }
     }

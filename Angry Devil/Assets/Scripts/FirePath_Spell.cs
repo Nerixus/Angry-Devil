@@ -6,9 +6,13 @@ public class FirePath_Spell : Spell
 {
     public float damageFrequency;
     public int damageRepetitions;
+    public int maxUses;
+    int uses;
 
     private void OnTriggerEnter(Collider other)
     {
+        if (uses == maxUses)
+            return;
         Debug.Log(other.name);
         if (other.tag == "Enemies")
         {
@@ -16,6 +20,7 @@ public class FirePath_Spell : Spell
             if (health != null)
             {
                 StartCoroutine(DamageRoutine(health));
+                uses++;
             }
         }
     }

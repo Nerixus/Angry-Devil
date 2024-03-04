@@ -9,11 +9,8 @@ public class Health : MonoBehaviour
 
 	public GameObject hitEffect;
 
-	
-
-	// Use this for initialization
-	void Start()
-	{
+    private void OnEnable()
+    {
 		health = healthMax;
 	}
 
@@ -23,7 +20,7 @@ public class Health : MonoBehaviour
 			health = Mathf.Clamp(health - damageInfo.damage, 0f, healthMax);
 
 		if (health == 0f)
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 	}
 
 	public float HealthValue

@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthMax: 20
+  health: 0
   hitEffect: {fileID: 0}
 --- !u!114 &4468610437303069694
 MonoBehaviour:
@@ -68,6 +69,8 @@ MonoBehaviour:
   attackRange: 1
   state: 0
   attackAnimation: {fileID: 7400000, guid: ea2b7b1447852468d8fe575ce8eca7fd, type: 2}
+  attackFrequency: 1.66666
+  damage: 5
 --- !u!136 &693538849
 CapsuleCollider:
   m_ObjectHideFlags: 0

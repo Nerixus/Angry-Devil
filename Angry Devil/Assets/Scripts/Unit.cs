@@ -1,23 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Health))]
 public class Unit : MonoBehaviour
 {
     public Health health;
-    private UnitPool pool;
+    public UnitPool pool;
 
-    public void Start()
+    public static event Action OnUnitActivated;
+    public static event Action OnUnitDeactivated;
+
+    public virtual void OnEnable()
     {
         if (health == null)
             health = GetComponent<Health>();
+        OnUnitActivated?.Invoke();
     }
 
-    public UnitPool Pool
+    public virtual void OnDisable()
     {
-        get { return pool; }
-        set { pool = value; }
+        ResetUnit();
+        OnUnitDeactivated?.Invoke();
     }
 
     public virtual void DealDamage(Unit target)
@@ -27,7 +32,8 @@ public class Unit : MonoBehaviour
 
     public virtual void ResetUnit()
     {
-        pool.ReturnToPool(this);
+        if(pool != null)
+            pool.ReturnToPool(this);
     }
 }
 

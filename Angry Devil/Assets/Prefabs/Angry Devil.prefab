@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthMax: 100
+  health: 0
   hitEffect: {fileID: 0}
 --- !u!114 &6708560590737323603
 MonoBehaviour:

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Enemy_Unit : Moving_Unit
 {
@@ -9,20 +10,33 @@ public class Enemy_Unit : Moving_Unit
     public float attackRange;
     public State state;
     public AnimationClip attackAnimation;
+    public float attackFrequency;
+    public float damage;
+    float lastAttackTime;
 
     bool attacking = false;
-    
-    void Start()
+    public static event Action OnDisabled;
+
+
+    public override void OnEnable()
     {
+        base.OnEnable();
         if (animatorComponent == null)
             animatorComponent = GetComponentInChildren<Animator>();
         StartCoroutine(Spawn());
+        lastAttackTime = Time.time;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        OnDisabled?.Invoke();
     }
 
     // Update is called once per frame
-    void Update()
+    public override void Start()
     {
-        StateMachine();
+        base.Start();
     }
 
     IEnumerator Spawn()
@@ -34,6 +48,24 @@ public class Enemy_Unit : Moving_Unit
         state = State.MOVING;
         animatorComponent.SetBool("moving", true);
         animatorComponent.SetBool("attacking", false);
+        StartCoroutine(StateCheck());
+    }
+
+    IEnumerator StateCheck()
+    {
+        while (target != null)
+        {
+            if (!target.isActiveAndEnabled)
+                break;
+            StateMachine();
+            yield return null;
+        }
+        Debug.Log("Character died");
+        StopAllCoroutines();
+        state = State.IDLE;
+        animatorComponent.SetBool("moving", false);
+        animatorComponent.SetBool("attacking", false);
+        animatorComponent.SetBool("idle", true);
     }
     void StateMachine()
     {
@@ -65,32 +97,36 @@ public class Enemy_Unit : Moving_Unit
 
     public void Attack()
     {
-        if (!attacking)
+        if (lastAttackTime <= Time.time && !attacking)
         {
-            attacking = true;
-            animatorComponent.SetBool("moving", false);
-            animatorComponent.SetBool("attacking", true);
-            StartCoroutine(Attacking());
+            lastAttackTime = Time.time + attackFrequency;
+            DealDamage(target);
         }
-        else
-        {
-            if (!IsTargetWithinAttackDistance())
-            {
-                state = State.MOVING;
-                attacking = false;
-                animatorComponent.SetBool("moving", true);
-                animatorComponent.SetBool("attacking", false);
-            }
-        }
+    }
+
+    public override void DealDamage(Unit target)
+    {
+        StartCoroutine(Attacking());
     }
 
     IEnumerator Attacking()
     {
-        while (attacking)
+        attacking = true;
+        animatorComponent.SetBool("moving", false);
+        animatorComponent.SetBool("attacking", true);
+        yield return new WaitForSeconds(attackFrequency * .5f);
+        target.health.Damage(new DamageInfo(damage));
+        yield return new WaitForSeconds(attackFrequency * .5f);
+        animatorComponent.SetBool("moving", true);
+        animatorComponent.SetBool("attacking", false);
+        if (!IsTargetWithinAttackDistance())
         {
-            yield return new WaitForSeconds(attackAnimation.length);
+            state = State.MOVING;
+            attacking = false;
+            animatorComponent.SetBool("moving", true);
+            animatorComponent.SetBool("attacking", false);
         }
-        yield return null;
+        attacking = false;
     }
     void GetPlayerUnit()
     {
@@ -105,6 +141,7 @@ public class Enemy_Unit : Moving_Unit
     public override void ResetUnit()
     {
         base.ResetUnit();
-
+        state = State.SPAWNING;
+        StopAllCoroutines();
     }
 }
